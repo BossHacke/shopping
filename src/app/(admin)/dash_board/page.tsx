@@ -1,5 +1,20 @@
-const DashBoardPage = () => {
-  return <div>Dash Board</div>;
-};
+'use client'
 
-export default DashBoardPage;
+import AdminCard from "@/components/admin/admin.card";
+
+const DashboardPage = () => {
+
+    return (
+        <div>
+            <AdminCard />
+        </div>
+    )
+}
+
+export default DashboardPage;
+
+
+
+
+
+
