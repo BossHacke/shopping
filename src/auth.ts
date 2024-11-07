@@ -8,7 +8,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
         Credentials({
             credentials: {
-                email: {},
+                username: {},
                 password: {}
             },
             authorize: async (credentials) => {
@@ -17,19 +17,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     method: "POST",
                     url: "http://localhost:8000/api/auth/login",
                     body: {
-                        username: credentials.email,
+                        username: credentials.username,
                         password: credentials.password,
                     }
                 });
 
                 console.log("check user", res);
 
-                if (!res.statusCode) {
+                if (res.statusCode === 201) {
                     return {
                         _id: res.data?.user._id,
                         name: res.data?.user.name,
                         email: res.data?.user.email,
-                        access_token: res.data?.user.access_token
+                        access_token: res.data?.access_token
                     };
                 } else if (+res.statusCode === 401) {
                     throw new InvalidEmailPasswordError();
@@ -67,6 +67,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session({ session, token }) {
             (session.user as IUser) = token.user;
             return session;
+        },
+        authorized: async ({ auth }) => {
+            return !!auth;
         }
     }
 })
